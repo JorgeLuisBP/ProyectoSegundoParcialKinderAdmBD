@@ -1,0 +1,17 @@
+--permite eliminar cursor en el caso que exista
+if OBJECT_ID('matriculados_total') is not null
+begin
+	drop procedure matriculados_total
+end
+go
+--
+create proc matriculados_total
+as
+select p.ProfNombres as NombreDelDocente,p.ProfApellidos as ApellidoDeldocente, a.nombre as Actividad, COUNT(*) as TotalDeEstudiantes
+	from Estudiante as e inner join ProgramaDeEducacion as pro
+	on pro.CodigoE=e.CodigoE inner join Profesional as p on pro.CodigoPro=p.CodigoP
+	inner join Actividad as a on pro.CodigoA=a.codigo
+	
+	group by p.ProfNombres,p.ProfApellidos, a.nombre
+	
+exec matriculados_total
