@@ -1,0 +1,58 @@
+select * from Estudiante
+select * from log_historial
+
+delete from log_historial
+
+select * from Estudiante
+select * from log_historial
+
+delete from Estudiante where CodigoE= 19
+
+insert into Estudiante values (19, '1029304940', 
+'Mirian Fernanda', 'Moreira Zambrano','Femenino', 'mirian@gmail.com', '2016-10-11' , 'Ecuatoriano', 'S', 18 , 'NO', 2000);
+go
+--triggers modo msm "ingreso"
+alter trigger TR_estudiante_msm
+on Estudiante 
+for insert
+as
+print 'se realizo el ingreso de un nuevo estudiante';
+go
+--triggers modo msm "Eliminacion"
+alter trigger TR_estudiante_msm2
+on Estudiante 
+for delete
+as
+print 'se realizo la eliminacion de un estudiante' 
+go
+----Trigger de insert datos---
+----Triggers que permita crear un LOG tipo historial que al momento de insertar y 
+----eliminar un registro, muestre el nombre, apellido, la fecha(actual) en la cual se realizo dicha acción, y una descripción de la acción realizada
+create trigger TR1_insert_estudiante
+	on Estudiante for insert
+	as
+begin
+	set nocount on
+	insert into log_historial(nombre, apellido, fecha, descripcion)
+	select ENombres,EApellidos,getdate(),'se ingreso un registro de un nuevo estudiante '
+	from inserted
+end
+
+
+select * from Estudiante;
+insert into Estudiante values (15, '1029304940', 
+'Lucio Marcos', 'Moreira Ramirez','Masculino', 'lucio@gmail.com', '2016-10-11' , 'Ecuatoriano', 'S', 20 , 'NO', 1000);
+
+delete from Estudiante where CodigoE='19'
+go
+------eliminar registros -Trigger--
+alter trigger Tr2_estudiante_delete
+		on Estudiante for delete
+		as 
+	begin
+		set nocount on;
+		insert into log_historial(nombre,apellido, fecha , descripcion)
+		select ENombres,EApellidos,getdate(), 'se ha eliminado registros de un estudiante'
+		from deleted
+	end
+		go
