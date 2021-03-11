@@ -15,3 +15,15 @@ select p.ProfNombres as NombreDelDocente,p.ProfApellidos as ApellidoDeldocente, 
 	group by p.ProfNombres,p.ProfApellidos, a.nombre
 	
 exec matriculados_total
+
+go
+create procedure SP_calculo
+@codigoest as varchar (2),
+@talla as int
+as 
+update Estudiante set TallaZapatos=TallaZapatos+@talla
+where CodigoE=@codigoest
+
+select * from Estudiante
+
+exec SP_calculo '19',2
